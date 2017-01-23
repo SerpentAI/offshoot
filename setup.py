@@ -18,7 +18,7 @@ requires = [
 setup(
     name='offshoot',
     version="0.1.0",
-    description='Dead simple plugin engine for files, config keys and packages. Supports: installation/uninstallation, callbacks, auto-imports & optional magic class annotations for protocol validation',
+    description='Modern, elegant, minimalistic but powerful plugin system for Python 3.5+.',
     long_description=long_description,
     author="Nicholas Brochu",
     author_email='nicholas@serpent.ai',
