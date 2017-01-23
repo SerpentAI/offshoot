@@ -1,0 +1,10 @@
+.python-version
+.idea
+.cache
+
+__pycache__/
+*.py[cod]
+
+dist/
+build/
+offshoot.egg-info/
