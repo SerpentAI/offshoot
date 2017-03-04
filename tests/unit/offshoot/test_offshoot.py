@@ -210,9 +210,70 @@ def test_base_should_be_able_to_discover_installed_plugins_for_a_specified_plugg
 
     TestPlugin.install()
 
-    offshoot.discover("TestPluggable", globals())
+    class_mapping = offshoot.discover("TestPluggable", globals())
+
+    assert isinstance(class_mapping, dict)
+    assert len(class_mapping) == 0
 
     assert inspect.isclass(TestPluginPluggableExpected)
+
+    TestPlugin.uninstall()
+
+    offshoot.config["allow"]["config"] = True
+    offshoot.config["allow"]["libraries"] = True
+    offshoot.config["allow"]["callbacks"] = True
+
+
+def test_base_should_be_able_to_discover_installed_plugins_for_a_specified_pluggable_with_no_scope_passed_along():
+    offshoot.config["allow"]["config"] = False
+    offshoot.config["allow"]["libraries"] = False
+    offshoot.config["allow"]["callbacks"] = False
+
+    offshoot.config["modules"].append("pluggable")
+
+    TestPlugin.install()
+
+    class_mapping = offshoot.discover("TestPluggable")
+
+    assert isinstance(class_mapping, dict)
+
+    assert len(class_mapping) == 1
+    assert "TestPluginPluggableExpected" in class_mapping
+    assert inspect.isclass(class_mapping["TestPluginPluggableExpected"])
+
+    TestPlugin.uninstall()
+
+    offshoot.config["allow"]["config"] = True
+    offshoot.config["allow"]["libraries"] = True
+    offshoot.config["allow"]["callbacks"] = True
+
+
+def test_base_should_be_able_to_determine_if_a_file_implements_a_specified_pluggable():
+    offshoot.config["allow"]["config"] = False
+    offshoot.config["allow"]["libraries"] = False
+    offshoot.config["allow"]["callbacks"] = False
+
+    offshoot.config["modules"].append("pluggable")
+
+    TestPlugin.install()
+
+    manifest = offshoot.Manifest()
+    files = manifest.plugin_files_for_pluggable("TestPluggable")
+
+    valid, plugin_class = offshoot.file_contains_pluggable(files[0][0], "TestPluggable")
+
+    assert valid is True
+    assert plugin_class == "TestPluginPluggableExpected"
+
+    valid, plugin_class = offshoot.file_contains_pluggable("INVALID.txt", "TestPluggable")
+
+    assert valid is False
+    assert plugin_class is None
+
+    valid, plugin_class = offshoot.file_contains_pluggable(files[0][0], "InvalidPluggable")
+
+    assert valid is False
+    assert plugin_class is None
 
     TestPlugin.uninstall()
 

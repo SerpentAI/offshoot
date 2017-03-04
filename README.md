@@ -103,6 +103,13 @@ import offshoot
 offshoot.discover("ExportFormat", globals())
 
 YAMLExportFormat # Now in scope!
+
+**Verifying if class name string maps to a discovered plugin class**
+```python
+import offshoot
+class_mapping = offshoot.discover("ExportFormat")  # We omit scope param to get the class mapping
+
+"YAMLExportFormat" in class_mapping  # True
 ```
 
 ## Requirements

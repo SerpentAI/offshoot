@@ -115,33 +115,59 @@ def installed_plugins():
     return installed
 
 
-def discover(pluggable, scope):
+def discover(pluggable, scope=None):
     manifest = Manifest()
 
     plugin_file_paths = manifest.plugin_files_for_pluggable(pluggable)
 
+    valid_class_names = list()
     import_statements = list()
 
     for plugin_file_path, pluggable in plugin_file_paths:
         plugin_module = plugin_file_path.replace(os.sep, ".").replace(".py", "")
-        plugin_class = None
 
-        with open(plugin_file_path, "r") as f:
-            syntax_tree = ast.parse(f.read())
+        valid, plugin_class = file_contains_pluggable(plugin_file_path, pluggable)
 
-        for statement in ast.walk(syntax_tree):
-            if isinstance(statement, ast.ClassDef):
-                class_name = statement.name
-                bases = list(map(lambda b: b.id if isinstance(b, ast.Name) else b.attr, statement.bases))
-
-                if pluggable in bases:
-                    plugin_class = class_name
-
-        if plugin_class:
+        if valid:
+            valid_class_names.append(plugin_class)
             import_statements.append("from %s import %s" % (plugin_module, plugin_class))
 
     for import_statement in import_statements:
-        exec(import_statement, scope)
+        if scope is not None:
+            exec(import_statement, scope)
+        else:
+            exec(import_statement)
+
+    if scope is None:
+        class_mapping = dict()
+
+        for valid_class_name in valid_class_names:
+            class_mapping[valid_class_name] = eval(valid_class_name)
+
+        return class_mapping
+    else:
+        return dict()
+
+
+def file_contains_pluggable(file_path, pluggable):
+    plugin_class = None
+
+    try:
+        with open(file_path, "r") as f:
+            syntax_tree = ast.parse(f.read())
+    except FileNotFoundError:
+        return [False, None]
+
+    for statement in ast.walk(syntax_tree):
+        if isinstance(statement, ast.ClassDef):
+            class_name = statement.name
+
+            bases = list(map(lambda b: b.id if isinstance(b, ast.Name) else b.attr, statement.bases))
+
+            if pluggable in bases:
+                plugin_class = class_name
+
+    return [plugin_class is not None, plugin_class]
 
 
 def executable_hook(plugin_class):
