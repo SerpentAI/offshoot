@@ -34,7 +34,7 @@ def install(plugin):
     print("OFFSHOOT: Attempting to install %s..." % plugin)
 
     plugin_directory = offshoot.config.get("file_paths").get("plugins")
-    plugin_path = "%s/%s/plugin.py" % (plugin_directory, plugin)
+    plugin_path = "%s/%s/plugin.py".replace("/", os.sep) % (plugin_directory, plugin)
 
     plugin_module_string = plugin_path.replace(os.sep, ".").replace(".py", "")
 
@@ -45,7 +45,7 @@ def uninstall(plugin):
     print("OFFSHOOT: Attempting to uninstall %s..." % plugin)
 
     plugin_directory = offshoot.config.get("file_paths").get("plugins")
-    plugin_path = "%s/%s/plugin.py" % (plugin_directory, plugin)
+    plugin_path = "%s/%s/plugin.py".replace("/", os.sep) % (plugin_directory, plugin)
 
     plugin_module_string = plugin_path.replace(os.sep, ".").replace(".py", "")
 

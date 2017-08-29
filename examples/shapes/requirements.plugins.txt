@@ -1,0 +1,10 @@
+### CirclePlugin Requirements ###
+invoke
+######
+
+### ShapesPlugin Requirements ###
+elasticsearch
+requests
+requests-respectful
+######
+

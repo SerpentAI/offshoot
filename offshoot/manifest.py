@@ -71,6 +71,6 @@ class Manifest:
         for name, metadata in manifest["plugins"].items():
             for file in metadata["files"]:
                 if file.get("pluggable") == pluggable:
-                    files.append(("plugins/%s/files/%s" % (name, file.get("path")), file.get("pluggable")))
+                    files.append(("plugins/%s/files/%s".replace("/", os.sep) % (name, file.get("path")), file.get("pluggable")))
 
         return files

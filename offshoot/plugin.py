@@ -66,7 +66,7 @@ class Plugin:
 
         try:
             for file_dict in cls.files:
-                plugin_file_path = "%s/%s/files/%s" % (offshoot.config["file_paths"]["plugins"], cls.name, file_dict["path"])
+                plugin_file_path = "%s/%s/files/%s".replace("/", os.sep) % (offshoot.config["file_paths"]["plugins"], cls.name, file_dict["path"])
 
                 # Pluggable Validation
                 if "pluggable" in file_dict:

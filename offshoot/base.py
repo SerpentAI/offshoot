@@ -16,7 +16,7 @@ def default_configuration():
         "modules": [],
         "file_paths": {
             "plugins": "plugins",
-            "config": "config/config.plugins.yml",
+            "config": "config/config.plugins.yml".replace("/", os.sep),
             "libraries": "requirements.plugins.txt"
         },
         "allow": {

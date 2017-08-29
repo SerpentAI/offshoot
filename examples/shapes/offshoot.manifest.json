@@ -1,0 +1,67 @@
+{
+    "plugins": {
+        "CirclePlugin": {
+            "name": "CirclePlugin",
+            "version": "0.1.0",
+            "files": [
+                {
+                    "path": "shapes/circle.py",
+                    "pluggable": "Shape"
+                }
+            ],
+            "libraries": [
+                "invoke"
+            ],
+            "config": {
+                "count": 12345,
+                "digits": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    0
+                ]
+            }
+        },
+        "ShapesPlugin": {
+            "name": "ShapesPlugin",
+            "version": "0.1.0",
+            "files": [
+                {
+                    "path": "shapes/rectangle.py",
+                    "pluggable": "Shape"
+                },
+                {
+                    "path": "shapes/triangle.py",
+                    "pluggable": "Shape"
+                },
+                {
+                    "path": "shapes/star.py",
+                    "pluggable": "Shape"
+                }
+            ],
+            "libraries": [
+                "requests",
+                "requests-respectful",
+                "elasticsearch"
+            ],
+            "config": {
+                "bot_uprising": {
+                    "happening": true,
+                    "casualties": 4523857
+                },
+                "fruit": [
+                    "apple",
+                    "pear",
+                    "orange"
+                ],
+                "answer": 42
+            }
+        }
+    }
+}
