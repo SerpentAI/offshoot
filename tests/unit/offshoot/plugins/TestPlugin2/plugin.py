@@ -1,18 +1,18 @@
 import offshoot
 
 
-class TestPlugin(offshoot.Plugin):
-    name = "TestPlugin"
+class TestPlugin2(offshoot.Plugin):
+    name = "TestPlugin2"
     version = "0.1.0"
 
-    plugins = []
+    plugins = ["TestPlugin"]
 
     libraries = [
         "requests"
     ]
 
     files = [
-        {"path": "test_plugin_pluggable_expected.py", "pluggable": "TestPluggable"}
+        {"path": "test_plugin_pluggable.py", "pluggable": "TestPluggable"}
     ]
 
     config = {
@@ -29,4 +29,4 @@ class TestPlugin(offshoot.Plugin):
 
 
 if __name__ == "__main__":
-    offshoot.executable_hook(TestPlugin)
+    offshoot.executable_hook(TestPlugin2)

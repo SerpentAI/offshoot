@@ -17,7 +17,7 @@ requires = [
 
 setup(
     name='offshoot',
-    version="0.1.2",
+    version="0.1.3",
     description='Modern, elegant, minimalistic but powerful plugin system for Python 3.5+.',
     long_description=long_description,
     author="Nicholas Brochu",

@@ -15,6 +15,7 @@ class Plugin:
     version = "0.0.0"
 
     libraries = list()
+    plugins = list()
     files = list()
     config = dict()
 
@@ -28,6 +29,8 @@ class Plugin:
 
     @classmethod
     def install(cls):
+        if offshoot.config["allow"]["plugins"] is True:
+            cls.verify_plugin_dependencies()
         if offshoot.config["allow"]["files"] is True:
             cls.install_files()
         if offshoot.config["allow"]["config"] is True:
@@ -53,6 +56,21 @@ class Plugin:
 
         manifest = offshoot.Manifest()
         manifest.remove_plugin(cls.name)
+
+    @classmethod
+    def verify_plugin_dependencies(cls):
+        print("\nOFFSHOOT PLUGIN INSTALL: Verifying that plugin dependencies are installed...\n")
+
+        manifest = offshoot.Manifest()
+
+        missing_plugin_names = list()
+
+        for plugin_name in cls.plugins:
+            if not manifest.contains_plugin(plugin_name):
+                missing_plugin_names.append(plugin_name)
+
+        if len(missing_plugin_names):
+            raise PluginError("One or more plugin dependencies are not met: %s. Please install them before continuing..." % ", ".join(missing_plugin_names))
 
     @classmethod
     def install_files(cls):
@@ -135,7 +153,7 @@ class Plugin:
                 config = {**config, **existing_config}
 
             with open(offshoot.config["file_paths"]["config"], "w") as f:
-                f.write(yaml.dump(config))
+                f.write(yaml.dump(config, default_flow_style=False))
 
         print("Merging the following keys:")
         print(config)

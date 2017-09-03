@@ -44,6 +44,7 @@ class Manifest:
                 "name": plugin_name,
                 "version": plugin_class.version,
                 "files": plugin_class.files,
+                "plugins": plugin_class.plugins,
                 "libraries": plugin_class.libraries,
                 "config": plugin_class.config
             }

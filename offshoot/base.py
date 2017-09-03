@@ -22,6 +22,7 @@ def default_configuration():
         "allow": {
             "files": True,
             "config": True,
+            "plugins": True,
             "libraries": True,
             "callbacks": True
         },

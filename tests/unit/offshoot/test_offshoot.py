@@ -6,6 +6,8 @@ import offshoot
 from pluggable import TestPluggable
 
 from plugins.TestPlugin.plugin import TestPlugin
+from plugins.TestPlugin2.plugin import TestPlugin2
+
 from plugins.TestInvalidPlugin.plugin import TestInvalidPlugin
 
 import yaml
@@ -1116,6 +1118,38 @@ def test_plugin_global_on_uninstall_callback_should_be_called_after_a_successful
     offshoot.config["allow"]["config"] = True
     offshoot.config["allow"]["libraries"] = True
 
+
+def test_plugin_an_error_should_be_raised_if_a_plugin_dependency_is_not_installed():
+    offshoot.config["allow"]["files"] = False
+    offshoot.config["allow"]["config"] = False
+    offshoot.config["allow"]["libraries"] = False
+    offshoot.config["allow"]["callbacks"] = False
+
+    with pytest.raises(offshoot.PluginError):
+        TestPlugin2.install()
+
+    offshoot.config["allow"]["files"] = True
+    offshoot.config["allow"]["config"] = True
+    offshoot.config["allow"]["libraries"] = True
+    offshoot.config["allow"]["callbacks"] = True
+
+
+def test_plugin_should_pass_plugin_dependency_verification_if_all_dependencies_are_present():
+    offshoot.config["allow"]["files"] = False
+    offshoot.config["allow"]["config"] = False
+    offshoot.config["allow"]["libraries"] = False
+    offshoot.config["allow"]["callbacks"] = False
+
+    TestPlugin.install()
+    TestPlugin2.install()
+
+    TestPlugin.uninstall()
+    TestPlugin2.uninstall()
+
+    offshoot.config["allow"]["files"] = True
+    offshoot.config["allow"]["config"] = True
+    offshoot.config["allow"]["libraries"] = True
+    offshoot.config["allow"]["callbacks"] = True
 
 def test_teardown():
     os.remove("plugins")

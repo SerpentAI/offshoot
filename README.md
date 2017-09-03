@@ -133,6 +133,7 @@ class_mapping = offshoot.discover("ExportFormat")  # We omit scope param to get 
         "libraries": "requirements.plugins.txt"
     },
     "allow": {
+    	"plugins": True,
         "files": True,
         "config": True,
         "libraries": True,
@@ -263,6 +264,12 @@ class ShapesPlugin(offshoot.Plugin):  # We extend offshoot.Plugin
     name = "ShapesPlugin"  # We define a name for the plugin. Matches the class name.
     version = "0.1.0"  # We define a version number for the plugin.
 
+    # A list of plugin dependencies to check for (by name) before installing the plugin.
+    # Optional.
+    plugins = [
+    	"RequiredShapesPlugin"
+    ]
+
     # A list of required PyPI packages for the plugin.
     # Optional. These libraries will be merge to your offshoot requirements.txt during the installation. Set to None if you don't intend to use it.
     libraries = [
@@ -354,11 +361,12 @@ After that, simply run the following in the command line:
 **What happens when a plugin is installed?**
 
 1. The _offshoot_ configuration file is consulted to fetch the allow flags
-2. If _files_ are allowed: Every plugin file in the plugin definition is validated against its pluggable class' protocol. If even one validation test fails, the installation fails and is reverted. File installation callbacks are executed.
-3. If _config_ is allowed: The configuration keys contained in the plugin definition file are merged in the configuration file defined in _offshoot.yml_.
-4. If _libraries_ are allowed: Libraries contained in the plugin definition file are merged in the libraries file defined in _offshoot.yml_.
-5. If _callbacks_ are allowed: The _on_install_ callback is executed.
-6. The plugin metadata is appended to the manifest.
+2. If _plugins_ are allowed: Every plugin listed as a dependency in the plugin definition is verified to be installed before continuing.
+3. If _files_ are allowed: Every plugin file in the plugin definition is validated against its pluggable class' protocol. If even one validation test fails, the installation fails and is reverted. File installation callbacks are executed.
+4. If _config_ is allowed: The configuration keys contained in the plugin definition file are merged in the configuration file defined in _offshoot.yml_.
+5. If _libraries_ are allowed: Libraries contained in the plugin definition file are merged in the libraries file defined in _offshoot.yml_.
+6. If _callbacks_ are allowed: The _on_install_ callback is executed.
+7. The plugin metadata is appended to the manifest.
 
 The installation process will not automatically install libraries with _pip_. It is assumed the user will permorm the pip installation.
 
