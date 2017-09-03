@@ -149,7 +149,7 @@ class Plugin:
                 f.write(yaml.dump(config))
         else:
             with open(offshoot.config["file_paths"]["config"], "r") as f:
-                existing_config = yaml.safe_load(f.read())
+                existing_config = yaml.safe_load(f.read()) or dict()
                 config = {**config, **existing_config}
 
             with open(offshoot.config["file_paths"]["config"], "w") as f:
