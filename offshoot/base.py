@@ -59,7 +59,7 @@ def map_pluggable_classes(config):
                     continue
 
                 pluggable_classes[c[0]] = c[1]
-        except ImportError:
+        except ImportError as e:
             warnings.warn("'%s' does not appear to be a valid module. Skipping!" % m)
 
     return pluggable_classes
@@ -116,7 +116,7 @@ def installed_plugins():
     return installed
 
 
-def discover(pluggable, scope=None):
+def discover(pluggable, scope=None, selection=None):
     manifest = Manifest()
 
     plugin_file_paths = manifest.plugin_files_for_pluggable(pluggable)
@@ -130,8 +130,15 @@ def discover(pluggable, scope=None):
         valid, plugin_class = file_contains_pluggable(plugin_file_path, pluggable)
 
         if valid:
-            valid_class_names.append(plugin_class)
-            import_statements.append("from %s import %s" % (plugin_module, plugin_class))
+            if selection:
+                if isinstance(selection, str):
+                    selection = [selection]
+                        
+                if not plugin_class in selection:
+                    continue
+            
+        valid_class_names.append(plugin_class)
+        import_statements.append("from %s import %s" % (plugin_module, plugin_class))
 
     for import_statement in import_statements:
         if scope is not None:

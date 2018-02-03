@@ -250,6 +250,39 @@ def test_base_should_be_able_to_discover_installed_plugins_for_a_specified_plugg
     offshoot.config["allow"]["callbacks"] = True
 
 
+def test_base_should_be_able_to_discover_installed_plugins_for_a_specified_pluggable_with_selection_passed_along():
+    offshoot.config["allow"]["config"] = False
+    offshoot.config["allow"]["libraries"] = False
+    offshoot.config["allow"]["callbacks"] = False
+
+    offshoot.config["modules"].append("pluggable")
+
+    TestPlugin.install()
+
+    class_mapping = offshoot.discover("TestPluggable", selection="123")
+
+    assert isinstance(class_mapping, dict)
+    assert len(class_mapping) == 0
+
+    class_mapping = offshoot.discover("TestPluggable", selection=["123"])
+
+    assert isinstance(class_mapping, dict)
+    assert len(class_mapping) == 0
+
+    class_mapping = offshoot.discover("TestPluggable", selection=["TestPluginPluggableExpected"])
+
+    assert isinstance(class_mapping, dict)
+    assert len(class_mapping) == 1
+    assert "TestPluginPluggableExpected" in class_mapping
+    assert inspect.isclass(class_mapping["TestPluginPluggableExpected"])
+
+    TestPlugin.uninstall()
+
+    offshoot.config["allow"]["config"] = True
+    offshoot.config["allow"]["libraries"] = True
+    offshoot.config["allow"]["callbacks"] = True
+
+
 def test_base_should_be_able_to_determine_if_a_file_implements_a_specified_pluggable():
     offshoot.config["allow"]["config"] = False
     offshoot.config["allow"]["libraries"] = False
