@@ -137,8 +137,8 @@ def discover(pluggable, scope=None, selection=None):
                 if not plugin_class in selection:
                     continue
             
-        valid_class_names.append(plugin_class)
-        import_statements.append("from %s import %s" % (plugin_module, plugin_class))
+            valid_class_names.append(plugin_class)
+            import_statements.append("from %s import %s" % (plugin_module, plugin_class))
 
     for import_statement in import_statements:
         if scope is not None:
